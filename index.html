@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Organizador de tarjetas personales para impresión en diferentes tamaños de hoja">
+    <meta name="author" content="Gersom">
+    <title>Organizador de Tarjetas para Impresión</title>
+    <link rel="stylesheet" href="./src/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📇 Organizador de Tarjetas para Impresión</h1>
+            <p>Sube tu diseño y organízalo en una cuadrícula perfecta para imprimir</p>
+        </div>
+
+        <div class="content">
+            <!-- Upload Section -->
+            <div class="upload-section" id="uploadSection">
+                <div class="upload-icon">📤</div>
+                <h3>Haz clic o arrastra tu imagen aquí</h3>
+                <p style="margin-top: 10px; color: #666;">Formatos soportados: JPG, PNG, GIF</p>
+                <input type="file" id="fileInput" accept="image/*">
+            </div>
+
+            <!-- Info Box -->
+            <div class="info-box">
+                <strong>ℹ️ Información</strong>
+                Selecciona el tamaño de hoja que necesitas o define dimensiones personalizadas. El modo de ajuste determina cómo se escala cada tarjeta.
+            </div>
+
+            <!-- Quick Presets -->
+            <h3 style="margin-bottom: 15px;">⚡ Presets Rápidos</h3>
+            <div class="quick-presets">
+                <button class="preset-btn" data-cols="2" data-rows="5">2x5 (10 tarjetas)</button>
+                <button class="preset-btn" data-cols="5" data-rows="2">5x2 (10 tarjetas)</button>
+                <button class="preset-btn" data-cols="3" data-rows="3">3x3 (9 tarjetas)</button>
+                <button class="preset-btn" data-cols="4" data-rows="3">4x3 (12 tarjetas)</button>
+                <button class="preset-btn" data-cols="3" data-rows="4">3x4 (12 tarjetas)</button>
+            </div>
+
+            <!-- Paper Configuration -->
+            <h3 style="margin-bottom: 15px;">📄 Configuración de Hoja</h3>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="paperSize">Tamaño de Hoja</label>
+                    <select id="paperSize">
+                        <option value="a4">A4 (210 x 297 mm)</option>
+                        <option value="letter">Letter (216 x 279 mm)</option>
+                        <option value="legal">Legal (216 x 356 mm)</option>
+                        <option value="a5">A5 (148 x 210 mm)</option>
+                        <option value="a3">A3 (297 x 420 mm)</option>
+                        <option value="custom">Personalizado</option>
+                    </select>
+                </div>
+                <div class="control-group" id="customWidthGroup" style="display: none;">
+                    <label for="customWidth">Ancho (mm)</label>
+                    <input type="number" id="customWidth" min="50" max="1000" value="210" step="1">
+                </div>
+                <div class="control-group" id="customHeightGroup" style="display: none;">
+                    <label for="customHeight">Alto (mm)</label>
+                    <input type="number" id="customHeight" min="50" max="1000" value="297" step="1">
+                </div>
+            </div>
+
+            <!-- Grid Configuration -->
+            <h3 style="margin-bottom: 15px; margin-top: 30px;">🎨 Configuración de Cuadrícula</h3>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="columns">Columnas</label>
+                    <input type="number" id="columns" min="1" max="10" value="2">
+                </div>
+                <div class="control-group">
+                    <label for="rows">Filas</label>
+                    <input type="number" id="rows" min="1" max="10" value="5">
+                </div>
+                <div class="control-group">
+                    <label for="spacing">Espaciado (mm)</label>
+                    <input type="number" id="spacing" min="0" max="20" value="5" step="1">
+                </div>
+                <div class="control-group">
+                    <label for="margin">Margen (mm)</label>
+                    <input type="number" id="margin" min="0" max="30" value="10" step="1">
+                </div>
+            </div>
+
+            <!-- Image Fit Configuration -->
+            <h3 style="margin-bottom: 15px; margin-top: 30px;">🖼️ Modo de Ajuste de Imagen</h3>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="fitMode">Modo de Ajuste</label>
+                    <select id="fitMode">
+                        <option value="fill">Rellenar (ocupar todo el espacio)</option>
+                        <option value="contain">Contener (mantener aspecto original)</option>
+                        <option value="cover">Cubrir (mantener aspecto, sin espacios)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="backgroundColor">Color de Fondo</label>
+                    <input type="color" id="backgroundColor" value="#ffffff">
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="generateBtn" disabled>
+                    <span>🎨</span> Generar Vista Previa
+                </button>
+                <button class="btn btn-secondary" id="printBtn" disabled>
+                    <span>🖨️</span> Imprimir
+                </button>
+                <div class="download-group">
+                    <button class="btn btn-secondary" id="downloadBtn" disabled>
+                        <span>💾</span> Descargar
+                    </button>
+                    <div class="download-dropdown" id="downloadDropdown">
+                        <button class="download-option" data-format="png">PNG</button>
+                        <button class="download-option" data-format="jpg">JPG</button>
+                        <button class="download-option" data-format="webp">WebP</button>
+                        <button class="download-option" data-format="pdf">PDF</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Container -->
+            <div class="preview-container">
+                <div class="preview-wrapper">
+                    <canvas id="previewCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./src/main.js"></script>
+</body>
+</html>
