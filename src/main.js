@@ -43,7 +43,7 @@ const PAPER_SIZES = {
     custom: { width: 210, height: 297 }
 };
 
-const PIXELS_PER_MM_AT_300DPI = 11.811023622; // Conversion factor from millimeters to pixels at 300 DPI
+const MM_TO_PX = 11.811023622; // Conversion factor from millimeters to pixels at 300 DPI
 
 /**
  * Initialize event listeners
